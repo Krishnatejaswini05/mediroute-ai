@@ -3,6 +3,9 @@ from pydantic import BaseModel
 from groq import Groq
 from dotenv import load_dotenv
 from agents.intent_agent import detect_intent
+from agents.escalation_agent import detect_escalation
+from workflows.orchestrator import orchestrate_patient_flow
+
 import os
 
 # Load environment variables
@@ -32,8 +35,6 @@ def chat(request: ChatRequest):
 
     user_message = request.message
 
-    detected_intent = detect_intent(user_message)
+    result = orchestrate_patient_flow(user_message)
 
-    return {
-        "intent": detected_intent
-    }
+    return result
