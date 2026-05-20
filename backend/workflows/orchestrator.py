@@ -1,5 +1,7 @@
 from agents.intent_agent import detect_intent
 from agents.escalation_agent import detect_escalation
+from agents.appointment_agent import handle_appointment_request
+from agents.no_show_agent import predict_no_show_risk
 
 def orchestrate_patient_flow(user_message):
 
@@ -21,11 +23,16 @@ def orchestrate_patient_flow(user_message):
 
     elif intent == "appointment":
 
+        appointment_response = handle_appointment_request(user_message)
+
+        no_show_prediction = predict_no_show_risk(user_message)
+
         return {
             "status": "appointment_workflow",
-            "message": "Routing patient to appointment scheduling.",
             "intent": intent,
-            "escalation": escalation
+            "escalation": escalation,
+            "appointment_response": appointment_response,
+            "no_show_prediction": no_show_prediction
         }
 
     elif intent == "insurance":
